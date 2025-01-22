@@ -1,54 +1,64 @@
 -- 0 --
-create database hotel;
+CREATE DATABASE hotel;
 -- execute 02-DB-Lab-hotel_db.sql --
 
+
 -- 01. Select Employee Information --
-select id, first_name || ' ' || last_name AS "Full Name", job_title as "Job Title" from employees;
+SELECT id, first_name || ' ' || last_name AS "Full Name", job_title AS "Job Title" FROM employees;
+
+SELECT id, CONCAT(first_name, ' ', last_name) AS "Full Name", job_title AS "Job Title" FROM employees;
+
 
 -- 02. Select Employees by Filtering --
-select id, first_name || ' ' || last_name AS "full_name", job_title as "job_title", salary from employees
-where salary > 1000
-order by id;
+SELECT id, CONCAT(first_name, ' ', last_name) AS full_name, job_title AS job_title, salary FROM employees
+WHERE salary > 1000
+ORDER BY id;
+
 
 -- 03. Select Employees by Multiple Filters --
-select id, first_name,  last_name, job_title, department_id, salary from employees
-where department_id = 4
-and salary >= 1000
-order by id
+SELECT id, first_name,  last_name, job_title, department_id, salary FROM employees
+WHERE department_id = 4
+AND salary >= 1000
+ORDER BY id
 ;
+
 
 -- 04. Insert Data into Employees Table --
-insert into employees (first_name, last_name, job_title, department_id, salary)
-values ('Samantha', 'Young', 'Housekeeping', 4, 900),
+INSERT INTO employees (first_name, last_name, job_title, department_id, salary)
+VALUES ('Samantha', 'Young', 'Housekeeping', 4, 900),
        ('Roger', 'Palmer', 'Waiter', 3, 928.33)
 ;
-select * from employees;
+SELECT * FROM employees;
+
 
 -- 05. Update Salary and Select --
-update employees
-set salary = salary + 100
-where job_title = 'Manager'
+UPDATE employees
+SET salary = salary + 100
+WHERE job_title = 'Manager'
 ;
-select * from employees
-where job_title = 'Manager';
+
+SELECT * FROM employees
+WHERE job_title = 'Manager';
+
 
 -- 06. Delete from Table --
-delete
-from employees
-where department_id in (1, 2)
+DELETE
+FROM employees
+WHERE department_id IN (1, 2)
 ;
-select * from employees
--- where department_id in (1, 2)
-order by id ;
+
+SELECT * FROM employees
+WHERE department_id in (1, 2);
+
 
 -- 07. Top Paid Employee View --
-select * from employees
-order by salary desc
-limit 1;
+SELECT * FROM employees
+ORDER BY salary desc
+LIMIT 1;
 
-create view top_paid_employee as
-    select * from employees
-    order by salary desc
-    limit 1;
+CREATE VIEW top_paid_employee AS
+    SELECT * FROM employees
+    ORDER BY salary DESC
+    LIMIT 1;
 
-select * from top_paid_employee;
+SELECT * FROM top_paid_employee;

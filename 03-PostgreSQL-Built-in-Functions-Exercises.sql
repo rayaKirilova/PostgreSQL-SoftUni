@@ -1,149 +1,177 @@
 -- Geography_DB Part --
 -- 0 --
-create database geography_db ;
--- execute script from file 03-DB-Exercises-geography_db.sql
+CREATE DATABASE geography_db ;
+-- execute script FROM file 03-DB-Exercises-geography_db.sql
+
 
 -- 01. River Info --
-create view view_river_info as
-    select concat('The river', ' ', river_name, ' ', 'flows into the', ' ', outflow, ' ', 'and is', ' ', "length", ' ', 'kilometers long.')
-    as "River Information" from rivers
-    order by river_name asc ;
+CREATE view view_river_info AS
+    SELECT CONCAT('The river', ' ', river_name, ' ', 'flows into the', ' ', outflow, ' ', 'and is', ' ', "LENGTH", ' ', 'kilometers long.')
+    AS "River Information" FROM rivers
+    ORDER BY river_name ASC ;
+
 
 -- 02. Concatenate Geography Data --
-create view view_continents_countries_currencies_details as
-    select concat(trim(cnt.continent_name), ': ', cnt.continent_code) as continent_details,
-           concat(ctr.country_name, ' - ', ctr.capital, ' - ', ctr.area_in_sq_km, ' - km2') as country_information,
-           concat(crc.description, ' (', crc.currency_code, ')') as currencies
-    from continents cnt
-        join countries ctr on cnt.continent_code = ctr.continent_code
-        join currencies crc on ctr.currency_code = crc.currency_code
-    order by country_information, currencies ;
+CREATE VIEW view_continents_countries_currencies_details AS
+    SELECT CONCAT(TRIM(cnt.continent_name), ': ', cnt.continent_code) AS continent_details,
+           CONCAT(ctr.country_name, ' - ', ctr.capital, ' - ', ctr.area_in_sq_km, ' - km2') AS country_information,
+           CONCAT(crc.description, ' (', crc.currency_code, ')') AS currencies
+    FROM continents cnt
+        JOIN countries ctr ON cnt.continent_code = ctr.continent_code
+        JOIN currencies crc ON ctr.currency_code = crc.currency_code
+    ORDER BY country_information, currencies ;
+
 
 -- 03. Capital Code --
-alter table countries
-add column capital_code varchar(2) ;
+ALTER TABLE countries
+ADD COLUMN capital_code varchar(2) ;
 
-update countries
-set capital_code = substring(capital from 1 for 2);
+UPDATE countries
+SET capital_code = SUBSTRING(capital FROM 1 FOR 2);
 
-select * from countries ;
+SELECT * FROM countries ;
+
 
 -- 04. Description --
-select substring(description from 5 for length(description)) as substring from currencies;
+SELECT SUBSTRING(description FROM 5 FOR LENGTH(description)) AS "substring" FROM currencies;
+
 
 -- 05. Substring River Length --
- select substring("River Information" from '([0-9]{1,4})') from view_river_info ;
+ SELECT SUBSTRING("River Information" FROM '([0-9]{1,4})') FROM view_river_info ;
+
 
 -- 06. Replace A --
-select replace(mountain_range, 'a', '@') as replace_a,
-       replace(mountain_range, 'A', '$') as replace_A from mountains ;
+SELECT REPLACE(mountain_range, 'a', '@') AS replace_a,
+       REPLACE(mountain_range, 'A', '$') AS replace_A FROM mountains ;
+
 
 -- 07. Translate --
-select capital, translate(capital, 'áãåçéíñóú', 'aaaceinou') as translated_name from countries ;
+SELECT capital, TRANSLATE(capital, 'áãåçéíñóú', 'aaaceinou') AS translated_name FROM countries ;
+
 
 -- 08. Leading --
-select continent_name, trim(both ' ' from continent_name) as trim from continents ;
+SELECT continent_name, TRIM(LEADING FROM continent_name) AS "trim" FROM continents ;
+
 
 -- 09. Trailing --
-select continent_name, trim(continent_name) as trim from continents ;
+SELECT continent_name, TRIM(TRAILING FROM continent_name) AS "trim" FROM continents ;
+
 
 -- 10. LTRIM & RTRIM --
-select trim(leading 'M' from peak_name) as left_trim, trim(trailing 'm' from peak_name) as right_trim from peaks ;
+SELECT TRIM(LEADING 'M' FROM peak_name) AS left_trim, trim(TRAILING 'm' FROM peak_name) AS right_trim FROM peaks ;
+
 
 -- 11. Character Length and Bits --
-select concat(mnt.mountain_range, ' ', pks.peak_name) as mountain_information,
-       length(concat(mnt.mountain_range, ' ', pks.peak_name)) as characters_length,
-       bit_length(concat(mnt.mountain_range, ' ', pks.peak_name)) as bits_of_a_tring
-from mountains mnt
-    inner join peaks pks on mnt.id = pks.mountain_id ;
+SELECT CONCAT(mnt.mountain_range, ' ', pks.peak_name) AS mountain_information,
+       LENGTH(CONCAT(mnt.mountain_range, ' ', pks.peak_name)) AS characters_length,
+       bit_LENGTH(CONCAT(mnt.mountain_range, ' ', pks.peak_name)) AS bits_of_a_tring
+FROM mountains mnt
+    INNER JOIN peaks pks ON mnt.id = pks.mountain_id ;
+
 
 -- 12. Length of a Number --
-select population, length(cast(population as text)) as length from countries ;
+SELECT population, LENGTH(CAST(population AS text)) AS "length" FROM countries ;
 
--- 13. Positive and Negative LEFT --
-select peak_name,
-    left(peak_name, 4) as positive_left,
-    substring(peak_name for greatest(0, length(peak_name) - 4)) as negative_left
-from peaks;
 
--- 14. Positive and Negative RIGHT --
-select peak_name,
-    right(peak_name, 4) as positive_right,
-    substring(peak_name from 5) as negative_right
-from peaks;
+-- 13. Positive and Negative Left --
+SELECT peak_name,
+    LEFT(peak_name, 4) AS positive_left,
+    SUBSTRING(peak_name FOR GREATEST(0, LENGTH(peak_name) - 4)) AS negative_left
+FROM peaks;
 
--- 15. Update iso_code --
- select country_name, iso_code, upper(left(country_name, 3)) as big from countries
- where iso_code is null ;
+
+-- 14. Positive and Negative Right --
+SELECT peak_name,
+    RIGHT(peak_name, 4) AS positive_right,
+    SUBSTRING(peak_name FROM 5) AS negative_right
+FROM peaks;
+
+
+-- 15. UPDATE iso_code --
+SELECT country_name, iso_code, UPPER(LEFT(country_name, 3)) AS big FROM countries
+WHERE iso_code IS NULL ;
 -- 63 rows
-update countries
-set iso_code = upper(left(country_name, 3))
-where iso_code is null ;
+UPDATE countries
+SET iso_code = UPPER(LEFT(country_name, 3))
+WHERE iso_code IS NULL ;
 
--- 16. REVERSE country_code --
-update countries
-set country_code = reverse(lower(country_code));
+
+-- 16. Reverse country_code --
+UPDATE countries
+SET country_code = REVERSE(LOWER(country_code));
+
 
 -- 17. Elevation --->> Peak Name --
-select concat(elevation, ' --->> ', peak_name) as "Elevation-->>Peak Name" from peaks
-where elevation >= 4884 ;
+SELECT CONCAT(elevation, ' --->> ', peak_name) AS "Elevation-->>Peak Name" FROM peaks
+WHERE elevation >= 4884 ;
+
+
 
 -- Booking_DB Part --
 -- 0 --
-create database booking_db ;
+CREATE DATABASE booking_db ;
 -- execute script from file 03-DB-Exercises-booking_db.sql
 
+
 -- 18. Arithmetical Operators --
-create table bookings_calculation as
-    select booked_for from bookings
-    where apartment_id = 93 ;
+CREATE TABLE bookings_calculation AS
+    SELECT booked_for FROM bookings
+    WHERE apartment_id = 93 ;
 
-alter table bookings_calculation
-add column multiplication numeric,
-add column modulo numeric ;
+ALTER TABLE bookings_calculation
+ADD COLUMN multiplication NUMERIC,
+ADD COLUMN modulo NUMERIC ;
 
-update bookings_calculation
-set multiplication = booked_for * 50,
-    modulo = mod(booked_for, 50);
+UPDATE bookings_calculation
+SET multiplication = booked_for * 50,
+    modulo = MOD(booked_for, 50);
 
--- 19. ROUND vs TRUNC --
-select latitude, round(latitude, 2) as round, trunc(latitude, 2) as trunc from apartments ;
+
+-- 19. Round vs Trunc --
+SELECT latitude, ROUND(latitude, 2) AS "round", TRUNC(latitude, 2) AS "trunc" FROM apartments ;
+
 
 -- 20. Absolute Value --
-select longitude, abs(longitude) from apartments ;
+SELECT longitude, ABS(longitude) FROM apartments ;
 
--- 22. EXTRACT Booked At --
-select extract(year from booked_at) as year,
-       extract(month from booked_at) as month,
-       extract(day from booked_at) as day,
-       extract(hour from booked_at) as hour,
-       extract(minute from booked_at) as minute,
-       ceiling(extract(second from booked_at)) as second
-from bookings ;
+
+-- 22. Extract Booked At --
+SELECT EXTRACT(YEAR FROM booked_at) AS year,
+       EXTRACT(MONTH FROM booked_at) AS month,
+       EXTRACT(DAY FROM booked_at) AS day,
+       EXTRACT(HOUR FROM booked_at) AS hour,
+       EXTRACT(MINUTE FROM booked_at) AS minute,
+       ceiling(EXTRACT(SECOND FROM booked_at)) AS second
+FROM bookings ;
+
 
 -- 24. Early Birds --
-select user_id, concat(extract(month from age(starts_at, booked_at)), ' mons ',
-                       extract(day from age(starts_at, booked_at)), ' days ',
-                       extract(hour from age(starts_at, booked_at)), ':',
-                       extract(minute from age(starts_at, booked_at)), ':',
-                       round(extract(second from age(starts_at, booked_at)), 3)
+SELECT user_id, CONCAT(EXTRACT(MONTH FROM age(starts_at, booked_at)), ' mons ',
+                       EXTRACT(DAY FROM age(starts_at, booked_at)), ' days ',
+                       EXTRACT(HOUR FROM age(starts_at, booked_at)), ':',
+                       EXTRACT(MINUTE FROM age(starts_at, booked_at)), ':',
+                       ROUND(EXTRACT(SECOND FROM age(starts_at, booked_at)), 3)
                        )
-from bookings
-where extract(month from age(starts_at, booked_at)) >= 10 ;
+FROM bookings
+WHERE EXTRACT(MONTH FROM age(starts_at, booked_at)) >= 10 ;
+
 
 -- 24. Match or Not --
-select companion_full_name, email from users
-where lower(companion_full_name) like '%and%'
-and email not like '%@gmail' ;
+SELECT companion_full_name, email FROM users
+WHERE LOWER(companion_full_name) LIKE '%and%'
+AND email NOT LIKE '%@gmail' ;
 
--- 25. COUNT by Initial --
-select substring(first_name from 1 for 2) as initials, count(id) as user_count from users
-group by substring(first_name from 1 for 2)
-order by user_count desc, initials ;
 
--- 26. SUM --
-select sum(booked_for) from bookings
-where apartment_id = 90 ;
+-- 25. Count by Initial --
+SELECT SUBSTRING(first_name,1, 2) AS initials, COUNT(id) AS user_count FROM users
+GROUP BY SUBSTRING(first_name, 1, 2)
+ORDER BY user_count DESC, initials ;
 
--- 27. AVERAGE Value --
-select avg(multiplication) from bookings_calculation ;
+
+-- 26. Sum --
+SELECT SUM(booked_for) FROM bookings
+WHERE apartment_id = 90 ;
+
+
+-- 27. Average Value --
+SELECT AVG(multiplication) FROM bookings_calculation ;

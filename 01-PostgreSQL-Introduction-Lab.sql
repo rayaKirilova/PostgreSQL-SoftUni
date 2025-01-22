@@ -1,49 +1,54 @@
--- 0 -- create database
-create database gamebar;
+-- 0 -- CREATE database
+CREATE DATABASE gamebar;
 
--- 01. Create Tables --
-create table employees(
-    id serial primary key not null,
-    first_name varchar(30),
-    last_name varchar(50),
-    hiring_date date default '2023-01-01',
-    salary numeric(10,2),
-    devices_number int
+-- 01. Create tables --
+CREATE TABLE employees(
+    id SERIAL PRIMARY KEY NOT NULL,
+    first_name VARCHAR(30),
+    last_name VARCHAR(50),
+    hiring_date DATE DEFAULT '2023-01-01',
+    salary NUMERIC(10,2),
+    devices_number INT
 );
-create table departments(
-    id serial primary key not null,
-    name varchar(50),
-    code character(3),
-    description text
+CREATE TABLE departments(
+    id SERIAL PRIMARY KEY NOT NULL,
+    name VARCHAR(50),
+    code CHARACTER(3),
+    description TEXT
 );
-create table issues(
-    id serial primary key unique,
-    description varchar(150),
-    date date,
-    start timestamp
+CREATE TABLE issues(
+    id SERIAL PRIMARY KEY UNIQUE,
+    description VARCHAR(150),
+    "date" DATE,
+    "start" TIMESTAMP
 );
 
--- 02. Alter Tables --
-alter table employees
-add column middle_name varchar(50)
+
+-- 02. Alter tables --
+ALTER TABLE employees
+ADD COLUMN middle_name VARCHAR(50)
 ;
+
 
 -- 03. Add Constraints --
-alter table employees
-alter column salary set not null,
-alter column salary set default 0,
-alter column hiring_date set not null
+ALTER TABLE employees
+ALTER COLUMN salary SET NOT NULL,
+ALTER COLUMN salary SET DEFAULT 0,
+ALTER COLUMN hiring_date SET NOT NULL
 ;
+
 
 -- 04. Modify Columns --
-alter table employees
-alter column middle_name type varchar(100)
+ALTER TABLE employees
+ALTER COLUMN middle_name TYPE VARCHAR(100)
 ;
 
+
 -- 05. Truncate Tables --
-truncate table issues;
+TRUNCATE TABLE issues;
+
 
 -- 06. Drop Tables --
-drop table departments;
+DROP TABLE departments;
 
 
